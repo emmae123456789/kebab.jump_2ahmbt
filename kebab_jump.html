@@ -30,7 +30,7 @@
         const canvas = document.getElementById("game");
         const ctx = canvas.getContext("2d");
 
-        let dino, obstacles, speed, score, gameOver, frame;
+        let dino, obstacles, speed, score, gameOver, frame, nextSpawn;
 
         function init() {
             dino = {
@@ -44,12 +44,14 @@
                 grounded: true
             };
 
-            obstacles = []; // ✅ FIX
-
+            obstacles = [];
             speed = 6;
             score = 0;
             gameOver = false;
             frame = 0;
+
+            // ✅ zufälliger erster Spawn
+            nextSpawn = Math.floor(Math.random() * 100) + 60;
         }
 
         // Controls
@@ -103,9 +105,12 @@
                 dino.grounded = true;
             }
 
-            // Spawn obstacles
-            if (frame % 90 === 0) {
+            // ✅ Random Spawn System
+            if (frame >= nextSpawn) {
                 spawnObstacle();
+
+                // neuer zufälliger Abstand (wird mit Speed schwerer)
+                nextSpawn = frame + Math.floor(Math.random() * 80) + (100 - speed * 5);
             }
 
             // Move obstacles
@@ -171,7 +176,7 @@
             requestAnimationFrame(loop);
         }
 
-        // ✅ FIX: richtiger Start
+        // Start
         init();
         loop();
 
